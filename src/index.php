@@ -2,7 +2,7 @@
 // =========================================================================
 // 1. IMPORTACIÓN DE LA CONEXIÓN E INFRAESTRUCTURA MULTI-DATABASE
 // =========================================================================
-require_once __DIR__ . '/src/db.php'; // Carga tu archivo db.php con PDO y la función de Mongo
+require_once __DIR__ . '/db.php'; // Carga tu archivo db.php con PDO y la función de Mongo
 
 $mensaje = ""; // Variable para almacenar el estado de las operaciones
 
