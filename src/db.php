@@ -20,7 +20,7 @@ if (!empty($database_url)) {
     // Construimos la cadena DSN limpia eliminando los esquemas con slashes '//'
     $dsn = "pgsql:host=$host;port=$port;dbname=$db;user=$user;password=$pass";
 } else {
-    // Plan de respaldo manual tradicional por si la variable fallara
+    // Plan de respaldo manual tradicional nativo (Formato limpio sin URL schemes)
     $dsn = "pgsql:host=dpg-d8kbnksvikkc73crpg10-a.oregon-postgres.render.com;port=5432;dbname=db_resenas_unilago;user=db_resenas_unilago_user;password=G8s4D3X5DYhrTXM5MHUpQB5M1iYPWzFq;sslmode=require";
 }
 
@@ -41,8 +41,8 @@ try {
 // NUEVA FUNCIÓN: LECTURA DESDE MONGODB ATLAS (Estructura NoSQL)
 // =========================================================================
 function obtenerResenasMongoDB() {
-    // Esta es la URL con tus credenciales y el nombre de tu clúster "Taller4Servidores"
-    $uri = "mongodb+srv://julianlancheros131_db_user:<db_password>@taller4servidores.oybiloa.mongodb.net/?appName=Taller4Servidores";
+    // CORREGIDO: Reemplazamos <db_password> por tu contraseña real del clúster
+    $uri = "mongodb+srv://julianlancheros131_db_user:G8s4D3X5DYhrTXM5MHUpQB5M1iYPWzFq@taller4servidores.oybiloa.mongodb.net/?appName=Taller4Servidores";
     
     if (class_exists('MongoDB\Driver\Manager')) {
         try {
