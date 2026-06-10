@@ -1,27 +1,35 @@
 <?php
 // =========================================================================
-// CONFIGURACIÓN DE CONEXIÓN REAL - POSTGRESQL (RENDER) CON INTEGRACIÓN SSL
+// CONFIGURACIÓN DE CONEXIÓN CLOUD POSTGRESQL (MÉTODO DE RED PRIVADA INTERNA)
 // =========================================================================
 
-// Evaluamos si existen variables en el panel de Render, de lo contrario usamos tus credenciales fijas
-$host = getenv('DB_HOST') ?: 'dpg-d8kbnksvikkc73crpg10-a.oregon-postgres.render.com';
-$db   = getenv('DB_NAME') ?: 'db_resenas_unilago';
-$user = getenv('DB_USER') ?: 'db_resenas_unilago_user';
-$pass = getenv('DB_PASS') ?: 'G8s4D3X5DYhrTXM5MHUpQB5M1iYPWzFq';
-$port = getenv('DB_PORT') ?: '5432';
+// El servidor web lee la variable DATABASE_URL que configuraste en el paso anterior
+$database_url = getenv('DATABASE_URL');
 
-// Construcción limpia del DSN forzando el sslmode requerido por Render
-$dsn = "pgsql:host=$host;port=$port;dbname=$db;user=$user;password=$pass;sslmode=require";
+if (!empty($database_url)) {
+    // Render entrega el esquema como "postgresql://". 
+    // PHP PDO requiere estrictamente "pgsql://" para poder activar su driver nativo.
+    $dsn = str_replace('postgresql://', 'pgsql://', $database_url);
+} else {
+    // Plan de respaldo con credenciales externas por si acaso
+    $host = 'dpg-d8kbnksvikkc73crpg10-a.oregon-postgres.render.com';
+    $db   = 'db_resenas_unilago';
+    $user = 'db_resenas_unilago_user';
+    $pass = 'G8s4D3X5DYhrTXM5MHUpQB5M1iYPWzFq';
+    $port = '5432';
+    
+    $dsn = "pgsql:host=$host;port=$port;dbname=$db;user=$user;password=$pass;sslmode=require";
+}
 
 try {
-    // Instanciamos PDO pasando los parámetros directamente
+    // Instanciamos la conexión pasando la URL ya formateada para PHP
     $pdo = new PDO($dsn);
     
-    // Configuramos el manejo de errores para que lance excepciones estructuradas
+    // Forzamos el manejo de excepciones estructuradas en caso de fallos en los queries
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 } catch (PDOException $e) {
-    // En caso de fallar, el servidor frena la ejecución de forma controlada
+    // Freno controlado si la red interna llega a fallar
     die("Error crítico de infraestructura de datos: " . $e->getMessage());
 }
 ?>
