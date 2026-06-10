@@ -141,3 +141,143 @@ try {
         }
         input[type="text"]:focus, select:focus, textarea:focus {
             outline: none;
+            border-color: #2563eb;
+            background-color: #ffffff;
+        }
+        button {
+            width: 100%;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-weight: bold;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .success { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .divider {
+            margin: 40px 0;
+            border: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+        .review-list-title {
+            color: #0f172a;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .review-card {
+            background: #f8fafc;
+            border-left: 4px solid #2563eb;
+            padding: 16px;
+            margin-bottom: 16px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .review-card h3 {
+            margin: 0 0 6px 0;
+            font-size: 16px;
+            color: #1e293b;
+        }
+        .review-card h3 span {
+            font-weight: normal;
+            color: #64748b;
+            font-size: 14px;
+        }
+        .stars {
+            color: #ea580c;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .comment {
+            margin: 10px 0 0 0;
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.5;
+        }
+        .date {
+            font-size: 11px;
+            color: #94a3b8;
+            display: block;
+            margin-top: 10px;
+            text-align: right;
+        }
+        .no-data {
+            text-align: center;
+            color: #64748b;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>UniLago — Reseñas Tecnológicas</h1>
+    <div class="subtitle">Módulo de Entrada e Infraestructura Cloud Multi-Database</div>
+
+    <?php echo $mensaje; ?>
+    
+    <form method="POST" action="">
+        <div class="form-group">
+            <label for="equipo">Nombre de Equipo o Componente:</label>
+            <input type="text" id="equipo" name="equipo" placeholder="Ej: Portátil Gamer Lenovo Legion 5 Pro" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="marca">Marca del Fabricante:</label>
+            <input type="text" id="marca" name="marca" placeholder="Ej: LENOVO" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="calificacion">Calificación Técnica / Rendimiento:</label>
+            <select id="calificacion" name="calificacion">
+                <option value="5">⭐⭐⭐⭐⭐ (5/5) Excelente rendimiento</option>
+                <option value="4">⭐⭐⭐⭐ (4/5) Muy competente</option>
+                <option value="3">⭐⭐⭐ (3/5) Desempeño estándar</option>
+                <option value="2">⭐⭐ (2/5) Limitado / Calentamiento</option>
+                <option value="1">⭐ (1/5) No recomendado</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="comentario">Reseña y Análisis Crítico:</label>
+            <textarea id="comentario" name="comentario" rows="4" placeholder="Detalla procesador, experiencia de uso, gestión térmica y pruebas en juegos/programas..." required></textarea>
+        </div>
+        
+        <button type="submit">Enviar Reseña y Sincronizar Sistemas</button>
+    </form>
+
+    <hr class="divider">
+
+    <h2 class="review-list-title">Feed de Reseñas Disponibles (PostgreSQL Cloud)</h2>
+    
+    <?php if (empty($resenas)): ?>
+        <p class="no-data">Actualmente no existen análisis de hardware registrados.</p>
+    <?php else: ?>
+        <?php foreach ($resenas as $r): ?>
+            <div class="review-card">
+                <h3><?php echo htmlspecialchars($r['equipo']); ?> <span>| Marca: <?php echo htmlspecialchars($r['marca']); ?></span></h3>
+                <div class="stars">Valoración: <?php echo $r['calificacion']; ?>/5</div>
+                <p class="comment"><?php echo nl2br(htmlspecialchars($r['comentario'])); ?></p>
+                <small class="date">Publicado el: <?php echo $r['fecha_publicacion']; ?></small>
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
+
+</body>
+</html>
+        input[type="text"]:focus, select:focus, textarea:focus {
+            outline: none;
