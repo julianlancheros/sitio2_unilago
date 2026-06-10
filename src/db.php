@@ -1,26 +1,27 @@
 <?php
-$host = 'dpg-d8kbnksvikkc73crpg10-a.oregon-postgres.render.com';
-$db   = 'db_resenas_unilago';
-$user = 'db_resenas_unilago_user';
-$pass = 'G8s4D3X5DYhrTXM5MHUpQB5M1iYPWzFq';
-$port = '5432';
+// =========================================================================
+// CONFIGURACIÓN DE CONEXIÓN REAL - POSTGRESQL (RENDER) CON INTEGRACIÓN SSL
+// =========================================================================
 
-// Intentamos pasar el parámetro directamente en la cadena
+// Evaluamos si existen variables en el panel de Render, de lo contrario usamos tus credenciales fijas
+$host = getenv('DB_HOST') ?: 'dpg-d8kbnksvikkc73crpg10-a.oregon-postgres.render.com';
+$db   = getenv('DB_NAME') ?: 'db_resenas_unilago';
+$user = getenv('DB_USER') ?: 'db_resenas_unilago_user';
+$pass = getenv('DB_PASS') ?: 'G8s4D3X5DYhrTXM5MHUpQB5M1iYPWzFq';
+$port = getenv('DB_PORT') ?: '5432';
+
+// Construcción limpia del DSN forzando el sslmode requerido por Render
 $dsn = "pgsql:host=$host;port=$port;dbname=$db;user=$user;password=$pass;sslmode=require";
 
 try {
-    // Le pasamos opciones adicionales a PDO para forzar la verificación y el SSL
-    $options = [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        // Algunas configuraciones de PHP nativo requieren este comando para entornos Postgres Cloud
-        PDO:: stillness_placeholder => isset($options) 
-    ];
+    // Instanciamos PDO pasando los parámetros directamente
+    $pdo = new PDO($dsn);
     
-    $pdo = new PDO($dsn, null, null, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
-    
+    // Configuramos el manejo de errores para que lance excepciones estructuradas
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
 } catch (PDOException $e) {
+    // En caso de fallar, el servidor frena la ejecución de forma controlada
     die("Error crítico de infraestructura de datos: " . $e->getMessage());
 }
 ?>
