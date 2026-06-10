@@ -1,26 +1,26 @@
 <?php
-// =========================================================================
-// CONFIGURACIÓN DE CONEXIÓN CLOUD POSTGRESQL (RENDER) - SITIO 2 (UNILAGO)
-// =========================================================================
+$host = 'dpg-d8kbnksvikkc73crpg10-a.oregon-postgres.render.com';
+$db   = 'db_resenas_unilago';
+$user = 'db_resenas_unilago_user';
+$pass = 'G8s4D3X5DYhrTXM5MHUpQB5M1iYPWzFq';
+$port = '5432';
 
-$host = getenv('DB_HOST') ?: 'dpg-d8kbnksvikkc73crpg10-a.oregon-postgres.render.com';
-$db   = getenv('DB_NAME') ?: 'db_resenas_unilago';
-$user = getenv('DB_USER') ?: 'db_resenas_unilago_user';
-$pass = getenv('DB_PASS') ?: 'G8s4D3X5DYhrTXM5MHUpQB5M1iYPWzFq';
-$port = getenv('DB_PORT') ?: '5432';
-
-// Construcción del Data Source Name (DSN) con el modo SSL requerido forzado
+// Intentamos pasar el parámetro directamente en la cadena
 $dsn = "pgsql:host=$host;port=$port;dbname=$db;user=$user;password=$pass;sslmode=require";
 
 try {
-    // Inicialización del objeto PDO para la conexión
-    $pdo = new PDO($dsn);
+    // Le pasamos opciones adicionales a PDO para forzar la verificación y el SSL
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        // Algunas configuraciones de PHP nativo requieren este comando para entornos Postgres Cloud
+        PDO:: stillness_placeholder => isset($options) 
+    ];
     
-    // Configuración para que PDO lance excepciones en caso de errores de SQL o infraestructura
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO($dsn, null, null, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
     
 } catch (PDOException $e) {
-    // Bloque de contingencia ante fallos de red o credenciales inválidas
     die("Error crítico de infraestructura de datos: " . $e->getMessage());
 }
 ?>
